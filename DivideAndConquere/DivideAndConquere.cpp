@@ -11,6 +11,18 @@ void printVect(vector<int> v){
 	}
 }
 
+bool isVectInOrder(vector<int> v){
+	bool result = true;
+	int size = v.size();
+	for (int i = 0; i < size - 1; i++){
+		int j = i + 1;
+		if (v[i] > v[j])
+			return false;
+	}
+	return result;
+}
+
+
 vector<int> MergeAndSort(vector<int> v){
 	int size = v.size();
 	int half_size = size / 2;
@@ -37,14 +49,26 @@ vector<int> MergeAndSort(vector<int> v){
 	int left = 0;
 	int right = 0;
 	for (int i = 0; i < size; i++){
-		if ((left >= size - half_size) || (v_right[right] < v_left[left])){
+		if (left >= size - half_size) {
 			v_out[i] = v_right[right];
 			right++;
 		}
 		else{
-			if ((right >= half_size) || (v_left[left] < v_right[right])){
+			if ((right >= half_size) ){
 				v_out[i] = v_left[left];
 				left++;
+			}
+			else{
+				if (v_right[right] < v_left[left]){
+					v_out[i] = v_right[right];
+					right++;
+				}
+				else {
+					if (v_left[left] < v_right[right]){
+						v_out[i] = v_left[left];
+						left++;
+					}
+				}
 			}
 		}
 	}
@@ -62,6 +86,12 @@ void MergeAndSortAndTest(){
 	v = MergeAndSort(v);
 	cout << endl << "ordered vector ";
 	printVect(v); cout << endl;
+
+	if (isVectInOrder(v))
+		cout << "SUCCESS! IN ORDER" << endl;
+	else
+		cout << "ERROR! NOT IN ORDER" << endl;
+
 }
 
 int main(int argc, char* argv[])
