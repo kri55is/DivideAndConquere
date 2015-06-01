@@ -11,7 +11,7 @@ void printVect(vector<int> v){
 	}
 }
 
-vector<int> DivideAndConquere(vector<int> v){
+vector<int> MergeAndSort(vector<int> v){
 	int size = v.size();
 	int half_size = size / 2;
 	if (size < 1){
@@ -30,8 +30,8 @@ vector<int> DivideAndConquere(vector<int> v){
 	vector<int> v_right(v.begin() + size - half_size, v.end());
 	printVect(v_right); cout << endl;
 
-	v_left = DivideAndConquere(v_left);
-	v_right = DivideAndConquere(v_right);
+	v_left = MergeAndSort(v_left);
+	v_right = MergeAndSort(v_right);
 
 	//merge
 	int left = 0;
@@ -54,20 +54,19 @@ vector<int> DivideAndConquere(vector<int> v){
 	return v_out;
 }
 
-void DivideAndConquereAndTest(){
+void MergeAndSortAndTest(){
 	vector <int> v = { 38, 27, 43, 3, 9, 82, 10 };
 	cout << endl << "un-ordered vector ";
 	printVect(v); cout << endl;
 
-	v = DivideAndConquere(v);
+	v = MergeAndSort(v);
 	cout << endl << "ordered vector ";
 	printVect(v); cout << endl;
 }
 
 int main(int argc, char* argv[])
 {
-	//KaratsubaMultiplicationAndTest();
-	DivideAndConquereAndTest();
+	MergeAndSortAndTest();
 	system("pause");
 	return 0;
 }
