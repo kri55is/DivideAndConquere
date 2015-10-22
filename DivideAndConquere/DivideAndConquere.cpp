@@ -6,12 +6,13 @@
 #include <Point.h>
 #include <ctime>
 
+
 using namespace std;
 
-void printVect(vector<int> v){
-	int size = v.size();
+void printVect(vector<int>* v){
+	int size = v->size();
 	for (int i = 0; i < size; i++){
-		cout << v.at(i) << " ";
+		cout << v->at(i) << " ";
 	}
 }
 
@@ -43,7 +44,9 @@ int createVectFromFile(string file, vector<int>& t){
 			//cout << num << '\n';
 			count_lines++;
 		}
+#ifdef _DEBUG
 		cout << "vect size is " << t.size() << endl;
+#endif
 		arrayFile.close();
 		return 0;
 	}
@@ -57,21 +60,28 @@ vector<int> MergeAndSort(vector<int> v){
 	int size = v.size();
 	int half_size = size / 2;
 	if (size < 1){
-		cout << "Error size is " << size << endl;
+		cout << "Error : 0 number is not enough to merge and sort... " << size << endl;
 		return  v;
 	}
 	if (size == 1) {
+#ifdef _DEBUG
 		cout << "out vector " << v[0] << endl;
+#endif
 		return v;
 	}
 
-	printVect(v); cout << "--->";
+#ifdef _DEBUG
+	printVect(&v); cout << "--->";
+#endif;
 	vector<int> v_out(size);
 	vector<int> v_left(v.begin(), v.begin() + size - half_size);
-	printVect(v_left); cout << "----";
+#ifdef _DEBUG
+	printVect(&v_left); cout << "----";
+#endif
 	vector<int> v_right(v.begin() + size - half_size, v.end());
-	printVect(v_right); cout << endl;
-
+#ifdef _DEBUG
+	printVect(&v_right); cout << endl;
+#endif
 	v_left = MergeAndSort(v_left);
 	v_right = MergeAndSort(v_right);
 
@@ -102,25 +112,28 @@ vector<int> MergeAndSort(vector<int> v){
 			}
 		}
 	}
+#ifdef _DEBUG
 	cout << "out vector ";
-	printVect(v_out); cout << endl;
-
+	printVect(&v_out); cout << endl;
+#endif
 	return v_out;
 }
 
 void MergeAndSortAndTest(){
 	vector <int> v = { 38, 27, 43, 3, 9, 82, 10 };
-	cout << endl << "un-ordered vector ";
-	printVect(v); cout << endl;
+	cout << endl << "un-ordered numbers :";
+	printVect(&v); cout << endl;
 
 	v = MergeAndSort(v);
-	cout << endl << "ordered vector ";
-	printVect(v); cout << endl;
+	cout << endl << "ordered numbers ";
+	printVect(&v); cout << endl;
 
 	if (isVectInOrder(&v))
 		cout << "SUCCESS! IN ORDER" << endl;
 	else
 		cout << "ERROR! NOT IN ORDER" << endl;
+	cout << endl;
+	cout << "******************************************************" << endl << endl;
 
 }
 
@@ -131,29 +144,29 @@ vector<int> CountInv(vector<int> v, long long int &num_inv){
 	long long int left_size = size - half_size;
 	long long int righ_size = size - left_size;
 	if (size < 1){
-#if _DEBUG
+#ifdef _DEBUG
 		cout << "Error size is " << size << endl;
 #endif
 		return  v;
 	}
 	if (size == 1) {
-#if _DEBUG
+#ifdef _DEBUG
 		cout << "out vector " << v[0] << endl;
 #endif
 		return v;
 	}
 
-#if _DEBUG
-	printVect(v); cout << "--->";
+#ifdef _DEBUG
+	printVect(&v); cout << "--->";
 #endif
 	vector<int> v_out(size);
 	vector<int> v_left(v.begin(), v.begin() + size - half_size);
-#if _DEBUG
-	printVect(v_left); cout << "----";
+#ifdef _DEBUG
+	printVect(&v_left); cout << "----";
 #endif
 	vector<int> v_right(v.begin() + size - half_size, v.end());
-#if _DEBUG
-	printVect(v_right); cout << endl;
+#ifdef _DEBUG
+	printVect(&v_right); cout << endl;
 #endif
 
 	v_left = CountInv(v_left, num_inv);
@@ -187,28 +200,37 @@ vector<int> CountInv(vector<int> v, long long int &num_inv){
 			}
 		}
 	}
-#if _DEBUG
+#ifdef _DEBUG
 	cout << "out vector ";
-	printVect(v_out); cout << endl;
+	printVect(&v_out); cout << endl;
 #endif
 
 	return v_out;
 }
 
 void CountInvAndTest(){
-	vector <int> v = { 1, 3, 5, 2, 4, 6 };
-	//vector <int> v = { 5,7,3,2,4,1,6}; //-->sol 13
-	cout << endl << "un-ordered vector ";
-	printVect(v); cout << endl;
+
+	/*vector<int> t;
+	long long int num = 0;
+	if (!createVectFromFile("C:/IntegerArray.txt", t)){
+	CountInv(t, num);
+	}
+	cout << "Found " << num << " inversions" << endl;*/
+
+	//vector <int> v = { 1, 3, 5, 2, 4, 6 };
+	vector <int> v = { 5,7,3,2,4,1,6}; //-->sol 13
+	cout << endl << "Numbers are: ";
+	printVect(&v); cout << endl;
 
 	long long int num = 0;
 	CountInv(v, num);
 
-	if (num == 3)
+	if (num == 13)
 		cout << "SUCCESS! INVERSIONS NUM GOOD" << endl;
 	else
 		cout << "ERROR! INVERSIONS NUM NOT GOOD. Found " << num << endl;
-	vector<int> t;
+	cout << endl;
+	cout << "******************************************************" << endl << endl;
 }
 
 void printPoint(Point* p){
@@ -246,7 +268,9 @@ float brutForceMinDistSearch(vector <Point*> vectPoint, int nbPoints){
 	else{
 		if (nbPoints == 2){
 			float result = Point::distanceBetweenPoints(vectPoint.at(0), vectPoint.at(1));
+			#ifdef _DEBUG
 			cout << "Min dist is " << result << endl;
+			#endif
 			return result;
 		}
 		else{
@@ -278,7 +302,9 @@ pair<Point*, Point*> brutForceClosestPair(vector <Point*> vectPoint){
 				}
 			}
 		}
+#ifdef _DEBUG
 		cout << "Min dist is " << minDist << " between : " << vectPoint.at(indexPoint1)->name << " and " << vectPoint.at(indexPoint2)->name << endl;
+#endif
 		closestPair = make_pair(vectPoint.at(indexPoint1), vectPoint.at(indexPoint2));
 		return closestPair;
 	}
@@ -558,8 +584,6 @@ pair<Point*, Point*> findClosestPair(vector<Point*> vectPoint){
 	
 	int nbPoints = vectPoint.size();
 
-	//brutForceMinDistSearch(vectPoint, nbPoints);
-
 	/* 1. Create Px and Py . Px sorts the points according to their x, Py same with y.*/
 	//Create and populate Px and Py
 	vector <Point*> Px;
@@ -567,10 +591,14 @@ pair<Point*, Point*> findClosestPair(vector<Point*> vectPoint){
 
 	//Sort Px ad Py
 	Px = mergeAndSortVectorPointOnX(vectPoint);
+#ifdef _DEBUG
 	cout << endl << "merge and sort on X" << endl;
+#endif
 	//printVectorPoint(Px);
 
+#ifdef _DEBUG
 	cout << endl << "merge and sort on Y" << endl;
+#endif
 	Py = mergeAndSortVectorPointOnY(vectPoint);
 	//printVectorPoint(Py);
 
@@ -593,6 +621,8 @@ void findClosestPairAndTest(){
 	Point F('f', static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / max)), static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / max)));
 	Point G('g', static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / max)), static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / max)));
 
+	cout << "The points are: " << endl;
+	printPoint(&A); printPoint(&B); printPoint(&C); printPoint(&D); printPoint(&E); printPoint(&F); printPoint(&G);
 	vector<Point*> vectPoint = { &A, &B, &C, &D, &E, &F, &G };
 	pair<Point*, Point*> algoPoints = findClosestPair(vectPoint);
 	pair<Point*, Point*> brutForcePoints = brutForceClosestPair(vectPoint);
@@ -610,6 +640,9 @@ void findClosestPairAndTest(){
 		else
 			cout << "INCORRECT" << endl;
 	}
+
+	cout << endl;
+	cout << "******************************************************" << endl << endl;
 }
 
 
@@ -641,9 +674,15 @@ void swap(vector<int>* t, int i, int j){
 	(*t)[j] = temp;
 }
 
+long long int choosePivot(long long int min, long long int max){
+	srand(static_cast <unsigned> (time(0)));
+	long long int pivot = min + rand() % (max-min) ;
+	return pivot;
+}
+
 void QuickSort(vector<int>* t, long long int first, long long int last){
 	long long int size = last - first + 1;
-	if (size <= 1) 
+	if (size <= 1)
 		return;
 	if (size == 2){
 		if ((*t)[last] < (*t)[first]){
@@ -651,11 +690,11 @@ void QuickSort(vector<int>* t, long long int first, long long int last){
 		}
 		return;
 	}
-	
+
 	int pivot = (*t)[first];
 	long long int lastPartitionned = first + 1;
 	long long int firstPartRight = first + 1;
-	
+
 	for (long long int lastPartitionned = first + 1; lastPartitionned <= last; lastPartitionned++){
 		if ((*t)[lastPartitionned] < pivot){
 			swap(t, lastPartitionned, firstPartRight);
@@ -665,14 +704,14 @@ void QuickSort(vector<int>* t, long long int first, long long int last){
 
 	//Place pivot at its place
 	if (firstPartRight != first){
-		swap(t, first, firstPartRight-1);
+		swap(t, first, firstPartRight - 1);
 	}
 
 	long long int firstLeft = first;
 	long long int lastLeft = firstPartRight - 2;
-	long long int firstRight = firstPartRight ;
+	long long int firstRight = firstPartRight;
 	long long int lastRight = last;
-	
+
 	QuickSort(t, firstLeft, lastLeft);
 	QuickSort(t, firstRight, lastRight);
 
@@ -687,30 +726,160 @@ void QuickSortAndTest(vector<int> *t){
 	else{
 		cout << "QUICKSORT INCORRECT" << endl;
 	}
+	cout << endl;
+	cout << "******************************************************" << endl << endl;
+}
+
+void printChoices(){
+	cout << "Hi, what will it be for you today?" << endl;
+	cout << "1- Merge and sort a list of numbers" << endl;
+	cout << "2- Count number of inversions in a list of numbers" << endl;
+	cout << "3- Find the closest pair of points in a list of 2 coordinates-points" << endl;
+	cout << "4- Sort a list of numbers with QuickSort algorithm WITHOUT a random pivot" << endl;
+	cout << "5- Sort a list of numbers with QuickSort algorithm WITH a random pivot" << endl;
+
+	cout << "0- Close Program" << endl;
+}
+
+bool is_digits(const string &str)
+{
+	return str.find_first_not_of("0123456789 ") == string::npos;
+}
+
+void buildVectorFromUser(vector <int>* v){
+	cout << "Enter integers seperated by space, then Enter." << endl;
+	string strVect;
+	cin.ignore(10000, '\n'); // to ignore everything that happened before (ex: if user pressed space after his previous choice)
+	getline(cin, strVect);
+
+	int size = strVect.length();
+	if (size > 0){
+
+		if (is_digits(strVect)){
+			int start = 0;
+			int end = 0;
+
+			while (end <= (size - 1)){
+				end = strVect.find(' ', start);
+				if (end == -1) end = size - 1;
+				string strNum = strVect.substr(start, end);
+				int num = atoi(strNum.c_str());
+				v->push_back(num);
+				start = end + 1;
+				end = start;
+			}
+
+			printVect(v);
+		}
+		else{
+			cout << "Error, please enter only integers." << endl;
+		}
+	}
 }
 
 int main(int argc, char* argv[])
 {
-	//MergeAndSortAndTest();
-	//CountInvAndTest();
-	/*vector<int> t;
-	long long int num = 0;
-	if (!createVectFromFile("C:/IntegerArray.txt", t)){
-		CountInv(t, num);
-	}
-	cout << "Found " << num << " inversions" << endl;*/
+	bool Continue = true;
+	while (Continue){
+		
+		printChoices();
+		string choice;
+		cin >> choice;
 
-	//findClosestPairAndTest();
+		int numChoice = atoi(choice.c_str());
+		cout << "Your choice : " << numChoice << endl;
 
-	//string file = "C:/IntegerArray10.txt";
-	//string file = "C:/IntegerArray9293.txt";
-	string file = "C:/IntegerArray.txt";
-	vector<int> t;
-	if (!createVectFromFile(file, t)){
-		QuickSortAndTest(&t);
+		switch (numChoice){
+		case 0:
+		{
+			Continue = false;
+			break;
+		}
+		case 1:{
+			cout << endl << endl;
+			cout << "******************************************************" << endl;
+			cout << "*        Merge and sort a list of numbers            *" << endl;
+			cout << "******************************************************" << endl;
+
+			MergeAndSortAndTest();
+			break;
+		}
+		case 2:{
+			cout << endl << endl;
+			cout << "******************************************************" << endl;
+			cout << "*   Count number of inversions in a list of numbers  *" << endl;
+			cout << "******************************************************" << endl;
+
+			CountInvAndTest();
+			break;
+		}
+		case 3:{
+			cout << endl << endl;
+			cout << "*******************************************************" << endl;
+			cout << "*        Find the closest pair of points in           *" << endl;;
+			cout << "*        a list of 2 coordinates - points             *" << endl;
+			cout << "*******************************************************" << endl;
+
+			findClosestPairAndTest();
+			break;
+		}
+		case 4:{
+			cout << endl << endl;
+			cout << "******************************************************" << endl;
+			cout << "*        Sort a list of numbers with QuickSort       *" << endl;
+			cout << "*           algorithm WITHOUT a random pivot         *" << endl; 
+			cout << "******************************************************" << endl;
+
+			//string file = "C:/IntegerArray10.txt";
+			//string file = "C:/IntegerArray9293.txt";
+			//string file = "C:/IntegerArray.txt";
+			string file = "./IntegerArray.txt";
+			vector<int> t;
+			if (!createVectFromFile(file, t)){
+			QuickSortAndTest(&t);
+			}
+			break;
+		}
+		case 5:{
+			cout << endl << endl;
+			cout << "******************************************************" << endl;
+			cout << "*        Sort a list of numbers with QuickSort       *" << endl;
+			cout << "*           algorithm WITH a random pivot            *" << endl;
+			cout << "******************************************************" << endl;
+			//string file = "C:/IntegerArray10.txt";
+			//string file = "C:/IntegerArray9293.txt";
+			/*string file = "C:/IntegerArray.txt";
+			vector<int> t;
+			if (!createVectFromFile(file, t)){
+			QuickSortAndTest(&t);
+			}*/
+			cout << "Comming soon ... work in progress..." << endl;
+			break;
+		}
+		case 6:{
+			cout << endl << endl;
+			cout << "******************************************************" << endl;
+			cout << "*                  Build Vect                       *" << endl;
+			cout << "******************************************************" << endl;
+
+			vector <int> v;
+			buildVectorFromUser(&v);
+			break;
+		}
+		default:
+		{
+			cout << endl << "Please enter a valid entry" << endl << endl;
+			break;
+		}
+		}
+
+		/*srand(static_cast <unsigned> (time(0)));
+		int randomNum;
+		for (int i = 0; i < 35; i++){
+		randomNum = rand() % 30;
+		cout << randomNum << " ";
+		}*/
 	}
-	
-	system("pause");
 	return 0;
 }
 
