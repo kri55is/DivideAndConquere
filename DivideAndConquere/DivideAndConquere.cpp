@@ -6,6 +6,7 @@
 #include <Point.h>
 #include <ctime>
 
+bool RANDOM = true;
 
 using namespace std;
 
@@ -717,10 +718,63 @@ void QuickSort(vector<int>* t, long long int first, long long int last){
 
 }
 
+
+void QuickSortRandom(vector<int>* t, long long int first, long long int last){
+	long long int size = last - first + 1;
+	if (size <= 1)
+		return;
+	if (size == 2){
+		if ((*t)[last] < (*t)[first]){
+			swap(t, first, last);
+		}
+		return;
+	}
+
+	/* Choose random pivot */
+	long long int indexPivot = choosePivot(first, last);
+	int pivot = (*t)[indexPivot];
+	long long int firstPartRight = first;
+
+	/* Move pivot at the end */
+	swap(t, indexPivot, last);
+
+	/* Move smaller values than pivot to the left, bigger values to the right */
+	for (long long int lastPartitionned = first; lastPartitionned < last; lastPartitionned++){
+		if ((*t)[lastPartitionned] < pivot){
+			swap(t, lastPartitionned, firstPartRight);
+			firstPartRight++;
+		}
+	}
+
+	//Place pivot at its place
+	if (last != firstPartRight){
+		swap(t, last, firstPartRight);
+	}
+
+	long long int firstLeft = first;
+	long long int lastLeft = firstPartRight;
+	long long int firstRight = (firstPartRight + 1) % (size-1);
+	long long int lastRight = last;
+
+	QuickSort(t, firstLeft, lastLeft);
+	QuickSort(t, firstRight, lastRight);
+
+}
 void QuickSortAndTest(vector<int> *t){
+	/*vector<int> v = {5,1,3,4,2};
+	long long int size = v.size();
+	QuickSortRandom(&v, 0, size - 1); 
+	if (isVectInOrder(&v)){*/
+
 	long long int size = t->size();
-	QuickSort(t, 0, size-1);
+	if (RANDOM){
+		QuickSortRandom(t, 0, size - 1);
+	}
+	else{
+		QuickSort(t, 0, size - 1);
+	}
 	if (isVectInOrder(t)){
+	
 		cout << "QUICKSORT CORRECT" << endl;
 	}
 	else{
@@ -830,6 +884,7 @@ int main(int argc, char* argv[])
 			cout << "*           algorithm WITHOUT a random pivot         *" << endl; 
 			cout << "******************************************************" << endl;
 
+			RANDOM = false;
 			//string file = "C:/IntegerArray10.txt";
 			//string file = "C:/IntegerArray9293.txt";
 			//string file = "C:/IntegerArray.txt";
@@ -848,12 +903,11 @@ int main(int argc, char* argv[])
 			cout << "******************************************************" << endl;
 			//string file = "C:/IntegerArray10.txt";
 			//string file = "C:/IntegerArray9293.txt";
-			/*string file = "C:/IntegerArray.txt";
+			string file = "./IntegerArray.txt";
 			vector<int> t;
 			if (!createVectFromFile(file, t)){
 			QuickSortAndTest(&t);
-			}*/
-			cout << "Comming soon ... work in progress..." << endl;
+			}
 			break;
 		}
 		case 6:{
